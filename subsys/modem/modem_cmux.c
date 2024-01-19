@@ -23,7 +23,7 @@ LOG_MODULE_REGISTER(modem_cmux, CONFIG_MODEM_MODULES_LOG_LEVEL);
 #define MODEM_CMUX_DATA_FRAME_SIZE_MIN		(MODEM_CMUX_FRAME_SIZE_MAX + \
 						 MODEM_CMUX_DATA_SIZE_MIN)
 
-#define MODEM_CMUX_CMD_DATA_SIZE_MAX		(0x04)
+#define MODEM_CMUX_CMD_DATA_SIZE_MAX		(0x08)
 #define MODEM_CMUX_CMD_FRAME_SIZE_MAX		(MODEM_CMUX_FRAME_SIZE_MAX + \
 						 MODEM_CMUX_CMD_DATA_SIZE_MAX)
 
@@ -790,7 +790,7 @@ static int modem_cmux_dlci_pipe_api_transmit(void *data, const uint8_t *buf, siz
 
 	struct modem_cmux_frame frame = {
 		.dlci_address = dlci->dlci_address,
-		.cr = false,
+		.cr = true,
 		.pf = false,
 		.type = MODEM_CMUX_FRAME_TYPE_UIH,
 		.data = buf,

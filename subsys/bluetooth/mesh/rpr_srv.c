@@ -6,7 +6,7 @@
 
 #include <stdlib.h>
 #include <zephyr/sys/slist.h>
-#include <zephyr/random/rand32.h>
+#include <zephyr/random/random.h>
 #include <zephyr/sys/byteorder.h>
 #include <zephyr/bluetooth/hci.h>
 #include <zephyr/bluetooth/mesh/rpr_srv.h>
@@ -267,13 +267,15 @@ static void scan_ext_report_send(void)
 	bt_mesh_model_msg_init(&buf, RPR_OP_EXTENDED_SCAN_REPORT);
 	net_buf_simple_add_u8(&buf, BT_MESH_RPR_SUCCESS);
 	net_buf_simple_add_mem(&buf, srv.scan.dev->uuid, 16);
-	if (!(srv.scan.dev->flags & BT_MESH_RPR_UNPROV_FOUND)) {
+
+	if (srv.scan.dev->flags & BT_MESH_RPR_UNPROV_FOUND) {
+		net_buf_simple_add_le16(&buf, srv.scan.dev->oob);
+	} else {
 		LOG_DBG("not found");
 		goto send;
 	}
 
 	if (srv.scan.dev->flags & BT_MESH_RPR_UNPROV_EXT_ADV_RXD) {
-		net_buf_simple_add_le16(&buf, srv.scan.dev->oob);
 		net_buf_simple_add_mem(&buf, srv.scan.adv_data->data,
 				       srv.scan.adv_data->len);
 		LOG_DBG("adv data: %s",
@@ -1335,7 +1337,6 @@ static void rpr_srv_reset(struct bt_mesh_model *mod)
 	atomic_clear(srv.flags);
 	srv.link.dev = NULL;
 	srv.scan.dev = NULL;
-	srv.mod = NULL;
 }
 
 const struct bt_mesh_model_cb _bt_mesh_rpr_srv_cb = {

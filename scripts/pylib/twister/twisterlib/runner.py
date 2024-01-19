@@ -1037,6 +1037,9 @@ class ProjectBuilder(FilterBuilder):
         instance = self.instance
 
         if instance.handler.ready:
+            logger.debug(f"Reset instance status from '{instance.status}' to None before run.")
+            instance.status = None
+
             if instance.handler.type_str == "device":
                 instance.handler.duts = self.duts
 
@@ -1052,7 +1055,7 @@ class ProjectBuilder(FilterBuilder):
             harness = HarnessImporter.get_harness(instance.testsuite.harness.capitalize())
             harness.configure(instance)
             if isinstance(harness, Pytest):
-                harness.pytest_run(instance.handler.timeout)
+                harness.pytest_run(instance.handler.get_test_timeout())
             else:
                 instance.handler.handle(harness)
 

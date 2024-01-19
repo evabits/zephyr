@@ -36,6 +36,8 @@ config HEAP_MEM_POOL_SIZE
 	default 64000000
 config MAIN_STACK_SIZE
 	default 320000
+config ACPI_PRT_BUS_NAME
+	default "_SB.PC00"
 
 if SHELL
 config SHELL_STACK_SIZE
@@ -44,10 +46,3 @@ endif # SHELL
 endif # ACPI
 
 endif # BOARD_INTEL_ADL_CRB || BOARD_INTEL_ADL_RVP
-
-if BOARD_INTEL_ADL_RVP
-
-config UART_NS16550_ACCESS_IOPORT
-	default y if UART_NS16550
-
-endif # BOARD_INTEL_ADL_RVP

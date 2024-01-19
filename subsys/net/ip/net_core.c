@@ -45,6 +45,7 @@ LOG_MODULE_REGISTER(net_core, CONFIG_NET_CORE_LOG_LEVEL);
 #include "ipv4.h"
 
 #include "dhcpv4.h"
+#include "dhcpv6_internal.h"
 
 #include "route.h"
 
@@ -135,7 +136,7 @@ static inline enum net_verdict process_data(struct net_pkt *pkt,
 		if (IS_ENABLED(CONFIG_NET_IPV6) && vtc_vhl == 0x60) {
 			return net_ipv6_input(pkt, is_loopback);
 		} else if (IS_ENABLED(CONFIG_NET_IPV4) && vtc_vhl == 0x40) {
-			return net_ipv4_input(pkt);
+			return net_ipv4_input(pkt, is_loopback);
 		}
 
 		NET_DBG("Unknown IP family packet (0x%x)", NET_IPV6_HDR(pkt)->vtc & 0xf0);
@@ -472,6 +473,11 @@ static inline int services_init(void)
 
 	status = net_dhcpv4_init();
 	if (status) {
+		return status;
+	}
+
+	status = net_dhcpv6_init();
+	if (status != 0) {
 		return status;
 	}
 

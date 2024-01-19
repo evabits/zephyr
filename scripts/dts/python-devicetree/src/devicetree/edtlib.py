@@ -1551,7 +1551,6 @@ class Node:
             # Allow a few special properties to not be declared in the binding
             if prop_name.endswith("-controller") or \
                prop_name.startswith("#") or \
-               prop_name.startswith("pinctrl-") or \
                prop_name in {
                    "compatible", "status", "ranges", "phandle",
                    "interrupt-parent", "interrupts-extended", "device_type"}:
@@ -2062,6 +2061,10 @@ class EDT:
         # first time the scc_order property is read.
 
         for node in self.nodes:
+            # Always insert root node
+            if not node.parent:
+                self._graph.add_node(node)
+
             # A Node always depends on its parent.
             for child in node.children.values():
                 self._graph.add_edge(child, node)

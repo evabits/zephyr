@@ -511,11 +511,9 @@ endif()
 if(DEFINED BUILD_VERSION)
   set(build_version_argument "-DBUILD_VERSION=${BUILD_VERSION}")
 elseif(NOT ZEPHYR_GIT_INDEX)
-  set(ZEPHYR_GIT_INDEX ZEPHYR_GIT_INDEX-NOTFOUND CACHE PATH
-    "Path to Zephyr git repository index file")
   if(EXISTS ${ZEPHYR_BASE}/.git/index)
-    set(ZEPHYR_GIT_DIR ${ZEPHYR_BASE}/.git/index CACHE PATH
-      "Path to Zephyr git repository index file" FORCE)
+    set(ZEPHYR_GIT_INDEX ${ZEPHYR_BASE}/.git/index CACHE PATH
+      "Path to Zephyr git repository index file")
   elseif(EXISTS ${ZEPHYR_BASE}/.git)
     # Likely a git-submodule. Let's ask git where the real database is located.
     find_package(Git QUIET)
@@ -535,7 +533,7 @@ elseif(NOT ZEPHYR_GIT_INDEX)
           message(WARNING "BUILD_VERSION: git rev-parse warned: ${stderr}")
         endif()
         set(ZEPHYR_GIT_INDEX ${zephyr_git_dir}/index CACHE PATH
-          "Path to Zephyr git repository index file" FORCE)
+          "Path to Zephyr git repository index file")
       endif()
     else()
       message(WARNING "Could not find git installation, "
@@ -1811,10 +1809,20 @@ if(CONFIG_CHECK_INIT_PRIORITIES)
   list(APPEND
     post_build_commands
     COMMAND ${PYTHON_EXECUTABLE} ${ZEPHYR_BASE}/scripts/build/check_init_priorities.py
-      --build-dir ${PROJECT_BINARY_DIR}/..
-      --edt-pickle ${EDT_PICKLE}
+      --elf-file=${ZEPHYR_BINARY_DIR}/${KERNEL_ELF_NAME}
       ${fail_on_warning}
     )
+endif()
+
+if(NOT CMAKE_C_COMPILER_ID STREQUAL "ARMClang")
+  add_custom_target(
+    initlevels
+    COMMAND ${PYTHON_EXECUTABLE} ${ZEPHYR_BASE}/scripts/build/check_init_priorities.py
+      --elf-file=${ZEPHYR_BINARY_DIR}/${KERNEL_ELF_NAME}
+      --initlevels
+    DEPENDS ${logical_target_for_zephyr_elf}
+    USES_TERMINAL
+  )
 endif()
 
 # Generate and use MCUboot related artifacts as needed.

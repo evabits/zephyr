@@ -563,6 +563,7 @@ simcom	SIMCom Wireless Solutions Co., LTD
 simtek	Cypress Semiconductor Corporation (Simtek Corporation)
 sinlinx	Sinlinx Electronics Technology Co., LTD
 sinovoip	SinoVoip Co., Ltd
+sinowealth	Sino Wealth Electronic Ltd
 sipeed	Shenzhen Sipeed Technology Co., Ltd.
 sirf	SiRF Technology, Inc.
 sis	Silicon Integrated Systems Corp.
@@ -580,6 +581,7 @@ sony	Sony Corporation
 spansion	Spansion Inc.
 sparkfun	SparkFun Electronics
 sprd	Spreadtrum Communications Inc.
+sqn	Sequans Communications
 sst	Silicon Storage Technology, Inc.
 sstar	Xiamen Xingchen(SigmaStar) Technology Co., Ltd. (formerly part of MStar Semiconductor, Inc.)
 st	STMicroelectronics
