@@ -50,7 +50,7 @@ struct udc_rpi_ep_state {
 	uint8_t next_pid;
 };
 
-#define USBD_THREAD_STACK_SIZE 1024
+#define USBD_THREAD_STACK_SIZE 8192
 
 K_THREAD_STACK_DEFINE(thread_stack, USBD_THREAD_STACK_SIZE);
 static struct k_thread thread;
